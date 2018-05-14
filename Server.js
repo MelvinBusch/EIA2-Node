@@ -22,7 +22,7 @@ var Server;
         _response.setHeader("Access-Control-Allow-Origin", "*");
         for (let key in query) {
             console.log(query[key]);
-            _response.write(key + "ist: " + query[key] + "<br/>");
+            _response.write(key + " ist: " + query[key] + "<br/>");
         }
         _response.write("Ich habe dich gehört<br/>");
         _response.write("Das Ergebnis ist: " + (a + b));
