@@ -1,8 +1,8 @@
 {
-	"name" : "Servertest",
+	"name" : "Node Server",
 	"version" : "1.0.0",
 	"description" : "First Server Test",
-	"author" : "Jirka",
+	"author" : "Melvin Busch",
 	"main" : "Server.js",
 	"scripts" : {
 		"start" : "node Server.js"
