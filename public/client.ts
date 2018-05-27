@@ -45,7 +45,7 @@ namespace Client {
         alert(xhr.responseText);
     };
   }
-
+  
   // Refresh Studis
   function refresh(): void {
     let xhr: XMLHttpRequest = new XMLHttpRequest();
@@ -82,7 +82,7 @@ namespace Client {
       xhr.send();
 
       xhr.onreadystatechange = () => {
-        if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {          
+        if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
           searchResult.innerText = xhr.responseText;
         }
       };
