@@ -1,4 +1,4 @@
-namespace Server {
+namespace Interfaces {
   
   export interface Studi {
     name: string;
@@ -11,6 +11,10 @@ namespace Server {
 
   export interface Studis {
     [matrikel: string]: Studi;
+  }
+  
+  export interface UrlObject {
+    [key: string]: string
   }
 
 }
