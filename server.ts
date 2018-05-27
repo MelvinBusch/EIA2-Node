@@ -1,6 +1,5 @@
 import * as Http from "http";
 import * as Url from "url";
-// import {StudiData} from "./Interfaces.js";
 
 namespace Server {
 
@@ -28,25 +27,25 @@ namespace Server {
         let studi: Interfaces.Studi = <Interfaces.Studi>JSON.parse(query["json"].toString());
         studis[studi.matrikel] = studi;
         _response.write("Student added!");
-
       }
 
       // Refresh Studis
       if (query["action"] == "refresh") {
         _response.write(JSON.stringify(studis));
+        console.log("refresh");
       }
 
       // Search Studi
       if (query["action"] == "search") {
-        // console.log(matrikel);
+
         let matrikel: string = JSON.parse(query["matrikel"].toString());
-        
 
-
-        if (studis[matrikel])
-          _response.write(studis[matrikel]);
-        else
+        if (studis[matrikel]) {
+          _response.write(JSON.stringify(studis[matrikel]));
+        }
+        else {
           _response.write("Kein Student gefunden! Bitte Suchanfrage anpassen");
+        }
 
       }
 

@@ -58,17 +58,20 @@ var Client;
     }
     // Search Studi
     function search() {
-        console.log("searched"); /*
-        let searchKey: string = inputs[7].value;
-        let xhr: XMLHttpRequest = new XMLHttpRequest();
-        xhr.open("GET", adress + "?action=search&matrikel=" + searchKey, true);
-        xhr.send();
-    
-        xhr.onreadystatechange = () => {
-          if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-            searchResult.innerText = xhr.readyState.toString();
-          }
-        };*/
+        let searchKey = inputs[7].value;
+        if (searchKey != "") {
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", adress + "?action=search&matrikel=" + searchKey, true);
+            xhr.send();
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
+                    searchResult.innerText = xhr.responseText;
+                }
+            };
+        }
+        else {
+            searchResult.innerText = "Bitte Suchanfrage eingeben!";
+        }
     }
     window.addEventListener("load", init);
 })(Client || (Client = {}));

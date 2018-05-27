@@ -1,7 +1,6 @@
 "use strict";
 const Http = require("http");
 const Url = require("url");
-// import {StudiData} from "./Interfaces.js";
 var Server;
 (function (Server) {
     let studis = {};
@@ -25,15 +24,17 @@ var Server;
             // Refresh Studis
             if (query["action"] == "refresh") {
                 _response.write(JSON.stringify(studis));
+                console.log("refresh");
             }
             // Search Studi
             if (query["action"] == "search") {
-                // console.log(matrikel);
                 let matrikel = JSON.parse(query["matrikel"].toString());
-                if (studis[matrikel])
-                    _response.write(studis[matrikel]);
-                else
+                if (studis[matrikel]) {
+                    _response.write(JSON.stringify(studis[matrikel]));
+                }
+                else {
                     _response.write("Kein Student gefunden! Bitte Suchanfrage anpassen");
+                }
             }
             // End Response
             _response.end();

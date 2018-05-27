@@ -54,7 +54,7 @@ namespace Client {
 
     xhr.onreadystatechange = () => {
       if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-        
+
         let studis = JSON.parse(xhr.responseText.toString());
         let answer: string = "";
 
@@ -63,10 +63,10 @@ namespace Client {
           answer += `Lastname: ${studis[studi].name}\n`;
           answer += `Firstname: ${studis[studi].firstname}\n`;
           answer += `Age: ${studis[studi].age}\n`;
-          answer += `Gender: ${studis[studi] ? "male" : "female"}\n`;  
+          answer += `Gender: ${studis[studi] ? "male" : "female"}\n`;
           answer += `Course: ${studis[studi].course}\n\n`;
         }
-        
+
         refreshArea.innerText = answer;
       }
     };
@@ -74,17 +74,21 @@ namespace Client {
 
   // Search Studi
   function search(): void {
-    console.log("searched");/*
     let searchKey: string = inputs[7].value;
-    let xhr: XMLHttpRequest = new XMLHttpRequest();
-    xhr.open("GET", adress + "?action=search&matrikel=" + searchKey, true);
-    xhr.send();
 
-    xhr.onreadystatechange = () => {
-      if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {
-        searchResult.innerText = xhr.readyState.toString();
-      }
-    };*/
+    if (searchKey != "") {
+      let xhr: XMLHttpRequest = new XMLHttpRequest();
+      xhr.open("GET", adress + "?action=search&matrikel=" + searchKey, true);
+      xhr.send();
+
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200) {          
+          searchResult.innerText = xhr.responseText;
+        }
+      };
+    } else {
+      searchResult.innerText = "Bitte Suchanfrage eingeben!";
+    }
   }
 
   window.addEventListener("load", init);
