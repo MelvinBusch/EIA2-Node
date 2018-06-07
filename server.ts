@@ -1,5 +1,6 @@
 import * as Http from "http";
 import * as Url from "url";
+import * as Database from "./database";
 
 namespace Server {
 
@@ -54,3 +55,9 @@ namespace Server {
     }
   }
 }
+
+
+/*
+function(json: string): void {
+  respond(_response, json);
+}*/

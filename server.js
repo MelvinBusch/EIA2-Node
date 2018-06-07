@@ -41,4 +41,8 @@ var Server;
         }
     }
 })(Server || (Server = {}));
+/*
+function(json: string): void {
+  respond(_response, json);
+}*/ 
 //# sourceMappingURL=server.js.map

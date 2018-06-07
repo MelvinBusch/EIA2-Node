@@ -1,15 +1,16 @@
 {
-	"name" : "nodeserver",
-	"version" : "1.0.0",
-	"description" : "First Server Test",
-	"author" : "Melvin Busch",
-	"main" : "Server.js",
-	"scripts" : {
-		"start" : "node Server.js"
+	"name": "nodeserver",
+	"version": "1.0.0",
+	"description": "First Server Test",
+	"author": "Melvin Busch",
+	"main": "Server.js",
+	"scripts": {
+		"start": "node Server.js"
 	},
-	"engines" : {
-		"node" : "6.11.1"
+	"engines": {
+		"node": "6.11.1"
 	},
-	"dependencies" : {
+	"dependencies": {
+		"mongodb": "^3.0.1"
 	}
 }
