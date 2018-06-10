@@ -7,11 +7,10 @@ let students: Mongo.Collection;
 
 if (process.env.NODE_ENV == "production") {
   // databaseURL = "mongodb://username:password@hostname:port/database";
-  databaseURL = "mongodb://testuser:testpassword@ds129532.mlab.com:29532/eia2";
-  databaseName = "eia2";
+  databaseURL = "mongodb://admin:admin123@ds247310.mlab.com:47310/eia_node";
+  databaseName = "eia_node";
 }
 
-// handleConnect wird aufgerufen wenn der Versuch, die Connection zur Datenbank herzustellen, erfolgte
 Mongo.MongoClient.connect(databaseURL, (_e: Mongo.MongoError, _db: Mongo.Db) => {
   if (_e)
     console.error("Unable to connect to database, error: ", _e);
@@ -24,16 +23,23 @@ Mongo.MongoClient.connect(databaseURL, (_e: Mongo.MongoError, _db: Mongo.Db) => 
 
 export function insert(_student: Interfaces.Studi): void {
   students.insertOne(_student, (_e: Mongo.MongoError) => {
-    console.log("Database insertion returned: " + _e);
+    if (_e)
+      console.error("Database refresh returned: " + _e);
   });
 }
 
-export function refresh(_callback: Function): void {
-  var cursor: Mongo.Cursor = students.find();
+export function refresh(): string {
+  let cursor: Mongo.Cursor = students.find();
+  let result: string;
   cursor.toArray((_e: Mongo.MongoError, _result: Interfaces.Studi[]) => {
     if (_e)
-      _callback("Error" + _e);
+      result =  "Error" + _e;
     else
-      _callback(JSON.stringify(_result));
+      result =  JSON.stringify(_result);
   });
+  return result;
+}
+
+export function search(_matrikel: string): string {
+  return JSON.stringify(students.find({"matrikel": _matrikel}));
 }

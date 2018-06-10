@@ -10,8 +10,6 @@ namespace Server {
   const server: Http.Server = Http.createServer((_request: Http.IncomingMessage, _response: Http.ServerResponse) => {
     _response.setHeader("content-type", "text/html; charset=utf-8");
     _response.setHeader("Access-Control-Allow-Origin", "*");
-
-    //_response.end(); => Causing errors for some reason...
   });
 
   server.addListener("request", filterRequest);
@@ -23,31 +21,30 @@ namespace Server {
 
     if (query["action"]) {
 
-      // Insert Studi
-      if (query["action"] == "insert") {
-        let studi: Interfaces.Studi = <Interfaces.Studi>JSON.parse(query["json"].toString());
-        studis[studi.matrikel] = studi;
-        _response.write("Student added!");
-      }
+      let action: string = query["action"];
 
-      // Refresh Studis
-      if (query["action"] == "refresh") {
-        _response.write(JSON.stringify(studis));
-        console.log("refresh");
-      }
+      switch (action) {
 
-      // Search Studi
-      if (query["action"] == "search") {
+        // Insert Studi
+        case "insert":
+          let studi: Interfaces.Studi = <Interfaces.Studi>JSON.parse(query["json"].toString());
+          Database.insert(studi);
+          _response.write("Student added!");
+          break;
 
-        let matrikel: string = JSON.parse(query["matrikel"].toString());
+        // Refresh Studis
+        case "refresh":
+          _response.write(Database.refresh());
+          break;
 
-        if (studis[matrikel]) {
-          _response.write(JSON.stringify(studis[matrikel]));
-        }
-        else {
-          _response.write("Kein Student gefunden! Bitte Suchanfrage anpassen");
-        }
-
+        // Search Studi
+        case "search":
+          let matrikel: string = JSON.parse(query["matrikel"].toString());
+          _response.write(Database.search(matrikel));
+          
+        default:
+          _response.write("Unknown command: " + action);
+          break;
       }
 
       // End Response

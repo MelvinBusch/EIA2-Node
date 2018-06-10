@@ -6,10 +6,9 @@ let db;
 let students;
 if (process.env.NODE_ENV == "production") {
     // databaseURL = "mongodb://username:password@hostname:port/database";
-    databaseURL = "mongodb://testuser:testpassword@ds129532.mlab.com:29532/eia2";
-    databaseName = "eia2";
+    databaseURL = "mongodb://admin:admin123@ds247310.mlab.com:47310/eia_node";
+    databaseName = "eia_node";
 }
-// handleConnect wird aufgerufen wenn der Versuch, die Connection zur Datenbank herzustellen, erfolgte
 Mongo.MongoClient.connect(databaseURL, (_e, _db) => {
     if (_e)
         console.error("Unable to connect to database, error: ", _e);
@@ -21,18 +20,25 @@ Mongo.MongoClient.connect(databaseURL, (_e, _db) => {
 });
 function insert(_student) {
     students.insertOne(_student, (_e) => {
-        console.log("Database insertion returned: " + _e);
+        if (_e)
+            console.error("Database refresh returned: " + _e);
     });
 }
 exports.insert = insert;
-function refresh(_callback) {
-    var cursor = students.find();
+function refresh() {
+    let cursor = students.find();
+    let result;
     cursor.toArray((_e, _result) => {
         if (_e)
-            _callback("Error" + _e);
+            result = "Error" + _e;
         else
-            _callback(JSON.stringify(_result));
+            result = JSON.stringify(_result);
     });
+    return result;
 }
 exports.refresh = refresh;
-//# sourceMappingURL=Database.js.map
+function search(_matrikel) {
+    return JSON.stringify(students.find({ "matrikel": _matrikel }));
+}
+exports.search = search;
+//# sourceMappingURL=database.js.map
