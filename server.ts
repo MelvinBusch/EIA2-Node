@@ -3,7 +3,10 @@ import * as Url from "url";
 import * as Database from "./database";
 
 let port: number = process.env.PORT || 8100;
-const server: Http.Server = Http.createServer();
+const server: Http.Server = Http.createServer((_request: Http.IncomingMessage, _response: Http.ServerResponse) => {
+  _response.setHeader("Access-Control-Allow-Origin", "*");
+  _response.setHeader("content-type", "text/html; charset=utf-8");
+});
 
 server.addListener("listening", () => console.log("Listening on Port: " + port));
 server.addListener("request", handleRequest);
