@@ -1,11 +1,11 @@
 {
 	"name": "nodeserver",
-	"version": "1.0.0",
-	"description": "First Server Test",
+	"version": "1.2.0",
+	"description": "StudiVZ with Database",
 	"author": "Melvin Busch",
-	"main": "Server.js",
+	"main": "server.js",
 	"scripts": {
-		"start": "node Server.js"
+		"start": "node server.js"
 	},
 	"engines": {
 		"node": "6.11.1"

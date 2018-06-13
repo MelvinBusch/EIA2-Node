@@ -2,59 +2,53 @@ import * as Http from "http";
 import * as Url from "url";
 import * as Database from "./database";
 
-namespace Server {
+let port: number = process.env.PORT || 8100;
+const server: Http.Server = Http.createServer();
 
-  let studis: Interfaces.Studis = {};
+server.addListener("listening", () => console.log("Listening on Port: " + port));
+server.addListener("request", handleRequest);
+server.listen(port);
 
-  const port: number = process.env.PORT || 8100;
-  const server: Http.Server = Http.createServer((_request: Http.IncomingMessage, _response: Http.ServerResponse) => {
-    _response.setHeader("content-type", "text/html; charset=utf-8");
-    _response.setHeader("Access-Control-Allow-Origin", "*");
-  });
+function handleRequest(_request: Http.IncomingMessage, _response: Http.ServerResponse): void {
+  
+  let query: Interfaces.UrlObject = Url.parse(_request.url, true).query;
+  let action: string = query["action"];
 
-  server.addListener("request", filterRequest);
-  server.listen(port);
+  switch (action) {
 
-  function filterRequest(_request: Http.IncomingMessage, _response: Http.ServerResponse): void {
+    // Insert Studi
+    case "insert":
+      let studi: Interfaces.Studi = JSON.parse(query["json"]);
+      Database.insert(studi);
+      respond(_response, "Student added!");
+      break;
 
-    let query: Interfaces.UrlObject = Url.parse(_request.url, true).query;
+    // Refresh Studis
+    case "refresh":
+      Database.find(function(json: string): void {
+        respond(_response, json);
+      }, "*");
+      break;
 
-    if (query["action"]) {
+    // Search Studi
+    case "search":
+      let matrikel: string = JSON.parse(query["matrikel"].toString());
+      Database.find(function(json: string): void {
+        respond(_response, json);
+      }, matrikel);
+      break;
 
-      let action: string = query["action"];
-
-      switch (action) {
-
-        // Insert Studi
-        case "insert":
-          let studi: Interfaces.Studi = <Interfaces.Studi>JSON.parse(query["json"].toString());
-          Database.insert(studi);
-          _response.write("Student added!");
-          break;
-
-        // Refresh Studis
-        case "refresh":
-          _response.write(Database.refresh());
-          break;
-
-        // Search Studi
-        case "search":
-          let matrikel: string = JSON.parse(query["matrikel"].toString());
-          _response.write(Database.search(matrikel));
-          
-        default:
-          _response.write("Unknown command: " + action);
-          break;
-      }
-
-      // End Response
-      _response.end();
-    }
+    default:
+      respond(_response, "Unknown command: " + action);
+      break;
   }
+
 }
 
-
-/*
-function(json: string): void {
-  respond(_response, json);
-}*/
+// Create Response
+function respond(_response: Http.ServerResponse, _responseText: string): void {
+  _response.setHeader("Access-Control-Allow-Origin", "*");
+  _response.setHeader("content-type", "text/html; charset=utf-8");
+  _response.write(_responseText);
+  _response.end();
+}

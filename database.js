@@ -1,7 +1,8 @@
 "use strict";
 const Mongo = require("mongodb");
 let databaseURL = "mongodb://localhost:27017";
-let databaseName = "Test";
+let databaseName = "test";
+let databaseCollection = "students";
 let db;
 let students;
 if (process.env.NODE_ENV == "production") {
@@ -9,21 +10,11 @@ if (process.env.NODE_ENV == "production") {
     databaseURL = "mongodb://admin:admin123@ds247310.mlab.com:47310/eia_node";
     databaseName = "eia_node";
 }
-/*
-Mongo.MongoClient.connect(databaseURL, (_e: Mongo.MongoError, _db: Mongo.Db) => {
-  if (_e)
-    console.error("Unable to connect to database, error: ", _e);
-  else {
-    console.log("Connected to database!");
-    db = _db.db(databaseName);
-    students = db.collection("students");
-  }
-});*/
 Mongo.MongoClient.connect(databaseURL)
     .then((_db) => {
     console.log("Connected to database!");
     db = _db.db(databaseName);
-    students = db.collection("students");
+    students = db.collection(databaseCollection);
 })
     .catch((_e) => {
     console.error("Unable to connect to database, error: ", _e);
@@ -31,24 +22,28 @@ Mongo.MongoClient.connect(databaseURL)
 function insert(_student) {
     students.insertOne(_student, (_e) => {
         if (_e)
-            console.error("Database insertion returned -> " + _e);
+            console.log("Database insertion returned: " + _e);
     });
 }
 exports.insert = insert;
-function refresh() {
-    let cursor = students.find();
-    let result;
-    cursor.toArray((_e, _result) => {
-        if (_e)
-            result = "Error" + _e;
-        else
-            result = JSON.stringify(_result);
-    });
-    return result;
+function find(_callback, _search) {
+    let cursor;
+    if (_search === "*") {
+        cursor = students.find().toArray((_e, studentArray) => {
+            if (_e)
+                _callback("Error" + _e);
+            else
+                _callback(JSON.stringify(studentArray));
+        });
+    }
+    else {
+        cursor = students.find({ "matrikel": _search }).toArray((_e, studentArray) => {
+            if (_e)
+                _callback("Error" + _e);
+            else
+                _callback(JSON.stringify(studentArray));
+        });
+    }
 }
-exports.refresh = refresh;
-function search(_matrikel) {
-    return JSON.stringify(students.find({ "matrikel": _matrikel }));
-}
-exports.search = search;
+exports.find = find;
 //# sourceMappingURL=database.js.map
